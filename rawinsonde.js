@@ -237,6 +237,9 @@ function pushLFREToInflux(header, data, dataType) {
   for (var i = 0; i < data.length; i++) {
     var dataObject = data[i];
     var point = new Point("rawinsonde");
+
+    point.timestamp(header.launch_time);
+
     point.tag("data_type", dataType.name);
     point.tag("location", header.location);
     point.tag("lat", dataType.lat);
