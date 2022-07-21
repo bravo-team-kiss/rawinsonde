@@ -6,8 +6,19 @@ const config = require("./config.json");
 // AMPS: Automatic Meteorological Profiling System
 // LRFE: Low Resolution Flight Element
 
+var hostname, fileName;
+
 function main() {
-  var fileName = process.argv[2];
+  hostname = process.argv[2];
+  if (hostname === undefined) {
+    console.log("Usage: rawinsonde.js <hostname> <fileName>");
+    return;
+  }
+  fileName = process.argv[3];
+  if (fileName === undefined) {
+    console.log("Usage: rawinsonde.js <hostname> <fileName>");
+    return;
+  }
   var file = fs.readFileSync(fileName, "utf8");
   console.log("File: ", file);
   lines = file.split("\n");
@@ -213,9 +224,12 @@ function pushLFREToInflux(header, data, dataType) {
   // You can generate an API token from the "API Tokens Tab" in the UI
   const token = process.env.INFLUX_TOKEN;
   const org = "team-kiss";
-  const bucket = "rawinsonde";
-
-  const client = new InfluxDB({ url: "http://localhost:8086", token: token });
+  const bucket = "sensordata";
+  const url = `http://${hostname}:8086`;
+  const client = new InfluxDB({
+    url,
+    token,
+  });
 
   const { Point } = require("@influxdata/influxdb-client");
   const writeApi = client.getWriteApi(org, bucket);
@@ -226,6 +240,8 @@ function pushLFREToInflux(header, data, dataType) {
     var point = new Point("rawinsonde");
     point.tag("data_type", dataType.name);
     point.tag("location", header.location);
+    point.tag("lat", dataType.lat);
+    point.tag("lon", dataType.lon);
     point.tag("altitude", dataObject.ALT);
 
     for (var j = 0; j < dataType.headers.length; j++) {
