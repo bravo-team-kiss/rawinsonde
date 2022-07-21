@@ -233,7 +233,6 @@ function pushLFREToInflux(header, data, dataType) {
 
   const { Point } = require("@influxdata/influxdb-client");
   const writeApi = client.getWriteApi(org, bucket);
-  writeApi.useDefaultTags({ host: "host1" });
 
   for (var i = 0; i < data.length; i++) {
     var dataObject = data[i];
