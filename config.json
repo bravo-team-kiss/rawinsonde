@@ -1,0 +1,128 @@
+{
+  "LRFE": {
+    "name": "LRFE",
+    "preamble": ["ALT", "GEOMFT", ""],
+    "postamble": ["TERMINATION"],
+    "headers": [
+      {
+        "header": "ALT",
+        "unit": "GEOMFT",
+        "field_definition": "Altitude of measurements"
+      },
+      {
+        "header": "DIR",
+        "unit": "DEG",
+        "field_definition": "Wind direction"
+      },
+      {
+        "header": "SPD",
+        "unit": "KTS",
+        "field_definition": "Wind speed"
+      },
+      {
+        "header": "SHR",
+        "unit": "/SEC",
+        "field_definition": "Shear"
+      },
+      {
+        "header": "TEMP",
+        "unit": "DEG C",
+        "field_definition": "Temperature"
+      },
+      {
+        "header": "DPT",
+        "unit": "DEG C",
+        "field_definition": "Dew point temperature"
+      },
+      {
+        "header": "PRESS",
+        "unit": "MBS",
+        "field_definition": "Pressure"
+      },
+      {
+        "header": "RH",
+        "unit": "PCT",
+        "field_definition": "Relative humidity"
+      },
+      {
+        "header": "ABHUM",
+        "unit": "G/M3",
+        "field_definition": "Absolute humidity"
+      },
+      {
+        "header": "DENSITY",
+        "unit": "G/M3",
+        "field_definition": "Density"
+      },
+      {
+        "header": "I/R",
+        "unit": "N",
+        "field_definition": "Index of refraction"
+      },
+      {
+        "header": "V/S",
+        "unit": "KTS",
+        "field_definition": "Speed of sound"
+      },
+      {
+        "header": "VPS",
+        "unit": "MBS",
+        "field_definition": "Vapor pressure"
+      },
+      {
+        "header": "PW",
+        "unit": "MM",
+        "field_definition": "Precipitable water"
+      }
+    ]
+  },
+  "MandatoryLevels": {
+    "name": "Mandatory Levels",
+    "preamble": ["MANDATORY LEVELS", "GEOPFT", ""],
+    "postamble": ["SIGNIFICANT LEVELS"],
+    "headers": [
+      {
+        "header": "GEOMFT",
+        "unit": "GEOMFT",
+        "field_definition": "Altitude of measurements"
+      },
+      { "header": "DIR", "unit": "DEG", "field_definition": "Wind direction" },
+      { "header": "KTS", "unit": "KTS", "field_definition": "Wind speed" },
+      { "header": "TEMP", "unit": "DEG C", "field_definition": "Temperature" },
+      {
+        "header": "DPT",
+        "unit": "DEG C",
+        "field_definition": "Dew point temperature"
+      },
+      { "header": "PRESS", "unit": "MBS", "field_definition": "Pressure" },
+      { "header": "RH", "unit": "PCT", "field_definition": "Relative humidity" }
+    ]
+  },
+  "SignificantLevels": {
+    "name": "Significant Levels",
+    "preamble": ["SIGNIFICANT LEVELS", "GEOMFT", ""],
+    "postamble": ["TERMINATION"],
+    "headers": [
+      {
+        "header": "GEOMFT",
+        "unit": "GEOMFT",
+        "field_definition": "Altitude of measurements"
+      },
+      { "header": "DIR", "unit": "DEG", "field_definition": "Wind direction" },
+      { "header": "KTS", "unit": "KTS", "field_definition": "Wind speed" },
+      { "header": "TEMP", "unit": "DEG C", "field_definition": "Temperature" },
+      {
+        "header": "DPT",
+        "unit": "DEG C",
+        "field_definition": "Dew point temperature"
+      },
+      { "header": "PRESS", "unit": "MBS", "field_definition": "Pressure" },
+      {
+        "header": "IR",
+        "unit": "N",
+        "field_definition": "Index of refraction"
+      },
+      { "header": "RH", "unit": "PCT", "field_definition": "Relative humidity" }
+    ]
+  }
+}
