@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "@influxdata/influxdb-client": "^1.27.0"
+  },
+  "name": "rawinsonde",
+  "version": "1.0.0",
+  "main": "rawinsonde.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bravo-team-kiss/rawinsonde.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bravo-team-kiss/rawinsonde/issues"
+  },
+  "homepage": "https://github.com/bravo-team-kiss/rawinsonde#readme",
+  "description": ""
+}
