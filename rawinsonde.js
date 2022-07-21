@@ -6,29 +6,29 @@ const config = require("./config.json");
 // AMPS: Automatic Meteorological Profiling System
 // LRFE: Low Resolution Flight Element
 
-var header;
-
-function main(filename) {
-  var file = fs.readFileSync(filename, "utf8");
+function main() {
+  var fileName = process.argv[2];
+  var file = fs.readFileSync(fileName, "utf8");
+  console.log("File: ", file);
   lines = file.split("\n");
 
-  header = parseHeader(lines);
+  var header = parseHeader(lines);
   console.log("Header: ", header);
 
   var lrfeData = parseData(lines, getDataTypeByName("LRFE"));
   console.log("LRFE Data: ", lrfeData);
-  // pushToInflux(lrfeData, "LRFE");
+  pushLFREToInflux(header, lrfeData, getDataTypeByName("LRFE"));
 
-  var mandatoryLevels = parseData(lines, getDataTypeByName("MandatoryLevels"));
-  console.log("Mandatory Levels: ", mandatoryLevels);
-  // pushToInflux(mandatoryLevels, "Mandatory Levels");
+  // var mandatoryLevels = parseData(lines, getDataTypeByName("MandatoryLevels"));
+  // console.log("Mandatory Levels: ", mandatoryLevels);
+  // // pushToInflux(mandatoryLevels, "Mandatory Levels");
 
-  var significantLevels = parseData(
-    lines,
-    getDataTypeByName("SignificantLevels")
-  );
-  console.log("Significant Levels: ", significantLevels);
-  // pushToInflux(significantLevels, "Significant Levels");
+  // var significantLevels = parseData(
+  //   lines,
+  //   getDataTypeByName("SignificantLevels")
+  // );
+  // console.log("Significant Levels: ", significantLevels);
+  // // pushToInflux(significantLevels, "Significant Levels");
 }
 
 function getDataTypeByName(name) {
@@ -37,12 +37,13 @@ function getDataTypeByName(name) {
 
 function parseHeader(lines) {
   var preamble = ["Start data file number"];
-  var startLine = findLineLocation(lines, preamble) + 1;
+  var startLine = findLineLocation(lines, preamble);
   console.log("Start Line: ", startLine);
   if (startLine < 0) {
     console.log("Error: Could not find preamble: " + preamble);
     return null;
   }
+
   var header = {};
 
   // Identifier header
@@ -63,7 +64,7 @@ function parseHeader(lines) {
   header.location = lines[startLine + 4];
 
   // Zulu time of balloon launch or initial measurement
-  header.launch_time = lines[startLine + 5];
+  header.launch_time = parseDate(lines[startLine + 5]);
 
   return header;
 }
@@ -146,8 +147,109 @@ function findLineLocation(
   return -1;
 }
 
-function postToInflux(data, dataType) {
+function parseDate(dateString) {
+  console.log("Date String: ", dateString);
+  let dateArray = dateString.trim().split(/\s+/);
+  let zulu_time = dateArray[0];
+  let hours = zulu_time.slice(0, 2);
+  let minutes = zulu_time.slice(2, 4);
+  let day = dateArray[1];
+  let monthIndex = getMonthIndex(dateArray[2]);
+  let year = "20" + dateArray[3];
+  var date = new Date(Date.UTC(year, monthIndex, day, hours, minutes));
+  console.log("Date: ", date);
+  return date;
+}
+
+function getMonthIndex(month) {
+  var monthIndex = -1;
+  switch (month) {
+    case "JAN":
+      monthIndex = 0;
+      break;
+    case "FEB":
+      monthIndex = 1;
+      break;
+    case "MAR":
+      monthIndex = 2;
+      break;
+    case "APR":
+      monthIndex = 3;
+      break;
+    case "MAY":
+      monthIndex = 4;
+      break;
+    case "JUN":
+      monthIndex = 5;
+      break;
+    case "JUL":
+      monthIndex = 6;
+      break;
+    case "AUG":
+      monthIndex = 7;
+      break;
+    case "SEP":
+      monthIndex = 8;
+      break;
+    case "OCT":
+      monthIndex = 9;
+      break;
+    case "NOV":
+      monthIndex = 10;
+      break;
+    case "DEC":
+      monthIndex = 11;
+      break;
+    default:
+      console.log("Error: Invalid month: " + month);
+      break;
+  }
+  return monthIndex;
+}
+
+function pushLFREToInflux(header, data, dataType) {
+  const { InfluxDB } = require("@influxdata/influxdb-client");
+
+  // You can generate an API token from the "API Tokens Tab" in the UI
+  const token = process.env.INFLUX_TOKEN;
+  const org = "team-kiss";
+  const bucket = "rawinsonde";
+
+  const client = new InfluxDB({ url: "http://localhost:8086", token: token });
+
+  const { Point } = require("@influxdata/influxdb-client");
+  const writeApi = client.getWriteApi(org, bucket);
+  writeApi.useDefaultTags({ host: "host1" });
+
+  for (var i = 0; i < data.length; i++) {
+    var dataObject = data[i];
+    var point = new Point("rawinsonde");
+    point.tag("data_type", dataType.name);
+    point.tag("location", header.location);
+    point.tag("altitude", dataObject.ALT);
+
+    for (var j = 0; j < dataType.headers.length; j++) {
+      var name = dataType.headers[j].header;
+      var value = dataObject[name];
+      point.floatField(name, value);
+    }
+
+    console.log("Point: ", point);
+
+    writeApi.writePoint(point);
+  }
+
+  writeApi
+    .close()
+    .then(() => {
+      console.log("FINISHED");
+    })
+    .catch((e) => {
+      console.error(e);
+      console.log("Finished ERROR");
+    });
+
   return;
 }
 
-main("test.txt");
+main();
