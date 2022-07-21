@@ -3,6 +3,8 @@
     "name": "LRFE",
     "preamble": ["ALT", "GEOMFT", ""],
     "postamble": ["TERMINATION"],
+    "lat": "28.475773",
+    "lon": "-80.558327",
     "headers": [
       {
         "header": "ALT",
@@ -80,6 +82,8 @@
     "name": "Mandatory Levels",
     "preamble": ["MANDATORY LEVELS", "GEOPFT", ""],
     "postamble": ["SIGNIFICANT LEVELS"],
+    "lat": "28.475773",
+    "lon": "-80.558327",
     "headers": [
       {
         "header": "GEOMFT",
@@ -102,6 +106,8 @@
     "name": "Significant Levels",
     "preamble": ["SIGNIFICANT LEVELS", "GEOMFT", ""],
     "postamble": ["TERMINATION"],
+    "lat": "28.475773",
+    "lon": "-80.558327",
     "headers": [
       {
         "header": "GEOMFT",
