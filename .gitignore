@@ -12,3 +12,6 @@ yarn-error.log
 .idea/
 /temp
 /docs
+.env
+.env.local
+.env.development
