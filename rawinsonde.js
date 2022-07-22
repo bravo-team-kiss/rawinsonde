@@ -9,6 +9,7 @@ const config = require("./config.json");
 var hostname, fileName;
 
 function main() {
+  console.log("==== Rawinsonde Parser ====");
   hostname = process.argv[2];
   if (hostname === undefined) {
     console.log("Usage: rawinsonde.js <hostname> <fileName>");
@@ -20,11 +21,11 @@ function main() {
     return;
   }
   var file = fs.readFileSync(fileName, "utf8");
-  console.log("File: ", file);
+  console.log("\nFile: ", file);
   lines = file.split("\n");
 
   var header = parseHeader(lines);
-  console.log("Header: ", header);
+  console.log("\nHeader: ", header);
 
   var lrfeData = parseData(lines, getDataTypeByName("LRFE"));
   console.log("LRFE Data: ", lrfeData);
@@ -219,6 +220,7 @@ function getMonthIndex(month) {
 }
 
 function pushLFREToInflux(header, data, dataType) {
+  console.log("\n\n==== Pushing LFRE to Influx ====");
   const { InfluxDB } = require("@influxdata/influxdb-client");
 
   // You can generate an API token from the "API Tokens Tab" in the UI
