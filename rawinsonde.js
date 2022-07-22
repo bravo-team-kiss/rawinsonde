@@ -1,4 +1,4 @@
-const fs = require("node:fs");
+const fs = require("fs");
 const config = require("./config.json");
 
 // Key Words:
@@ -240,14 +240,49 @@ function pushLFREToInflux(header, data, dataType) {
 
     point.timestamp(header.launch_time);
 
-    point.tag("data_type", dataType.name);
-    point.tag("location", header.location);
-    point.tag("lat", dataType.lat);
-    point.tag("lon", dataType.lon);
-    point.tag("altitude", dataObject.ALT);
+    if (!dataType.name) {
+      console.log("Error: No data type name specified");
+    } else {
+      point.tag("data_type", dataType.name);
+    }
+
+    if (!header.location) {
+      console.log("Error: No data type location specified");
+    } else {
+      point.tag("location", header.location);
+    }
+
+    if (!dataType.lat) {
+      console.log("Error: No data type lat specified");
+    } else {
+      point.tag("lat", dataType.lat);
+    }
+
+    if (!dataType.lon) {
+      console.log("Error: No data type lon specified");
+    } else {
+      point.tag("lon", dataType.lon);
+    }
+
+    if (!dataObject.ALT) {
+      console.log("Error: No data type alt specified");
+    } else {
+      point.tag("altitude", dataObject.ALT);
+    }
 
     for (var j = 0; j < dataType.headers.length; j++) {
+      if (!dataType.headers[j].header) {
+        console.log("Error: No data type header specified");
+        continue;
+      }
       var name = dataType.headers[j].header;
+
+      if (!dataObject[name]) {
+        console.log(
+          "Error: No data found for header: " + name + " at index: " + j
+        );
+        continue;
+      }
       var value = dataObject[name];
       point.floatField(name, value);
     }
