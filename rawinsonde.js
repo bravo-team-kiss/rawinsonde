@@ -281,7 +281,12 @@ function pushLFREToInflux(header, data, dataType) {
 
       if (!dataObject[name]) {
         console.log(
-          "Error: No data found for header: " + name + " at index: " + j
+          "Error: No data found for header: " +
+            name +
+            " on line " +
+            (i + 1) +
+            " at index: " +
+            j
         );
         continue;
       }
